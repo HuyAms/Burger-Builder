@@ -7,15 +7,37 @@ class Checkout extends Component {
       salad: 1,
       meat: 1,
       cheese: 1,
-      bacon: 1
-    }
+      bacon: 1,
+    },
+  };
+
+  checkoutCancelledHandler = () => {
+    this.props.history.goBack();
   }
+
+  componentDidMount() {
+    const query = new URLSearchParams(this.props.location.search);
+    const ingredients = {};
+    for (let param of query.entries()) {
+      //['salad'], '1']
+      ingredients[param[0]] = +param[1];
+    }
+    this.setState({ingredients: ingredients});
+  }
+
+  checkoutContinueHandler = () => {
+    this.props.history.replace('/checkout/contact-data');
+  }
+
   render() {
     return (
         <div>
-          <CheckoutSummary ingredients={this.state.ingredients}/>
+          <CheckoutSummary
+              onCheckoutCancelled={this.checkoutCancelledHandler}
+              onCheckoutContinued={this.checkoutContinueHandler}
+              ingredients={this.state.ingredients}/>
         </div>
-    )
+    );
   }
 }
 
