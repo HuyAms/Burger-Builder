@@ -131,27 +131,22 @@ class ContactData extends Component {
 
   onChangedHandler = (event, inputIdentifier) => {
     const updatedOrderForm = {
-      ...this.state.orderForm,
+      ...this.state.orderForm
     };
-
     const updatedFormElement = {
-      ...updatedOrderForm[inputIdentifier],
+      ...updatedOrderForm[inputIdentifier]
     };
-
     updatedFormElement.value = event.target.value;
+    updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
     updatedFormElement.touched = true;
-
-    updatedFormElement.valid = this.checkValidity(updatedFormElement.value,
-        updatedFormElement.validation);
+    updatedOrderForm[inputIdentifier] = updatedFormElement;
 
     let formIsValid = true;
-    for (let inputIdentifier in updatedFormElement) {
-      formIsValid = updatedFormElement[inputIdentifier].valid && formIsValid;
+    for (let inputIdentifier in updatedOrderForm) {
+      formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
     }
-
-    updatedOrderForm[inputIdentifier] = updatedFormElement;
     this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
-  };
+  }
 
   render() {
     const formElementArray = [];
@@ -194,9 +189,9 @@ class ContactData extends Component {
 
 const mapStateToProps = state => {
   return {
-    ings: state.ingredients,
-    price: state.totalPrice,
-    loading: state.loading
+    ings: state.burgerBuilder.ingredients,
+    price: state.burgerBuilder.totalPrice,
+    loading: state.order.loading
   };
 };
 
