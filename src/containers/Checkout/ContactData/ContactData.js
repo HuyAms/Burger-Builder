@@ -19,64 +19,64 @@ class ContactData extends Component {
         },
         value: '',
         validation: {
-          required: true
+          required: true,
         },
         valid: false,
-        touched: false
+        touched: false,
       },
       street: {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          placeholder: 'Street'
+          placeholder: 'Street',
         },
         value: '',
         validation: {
-          required: true
+          required: true,
         },
         valid: false,
-        touched: false
+        touched: false,
       },
       zipCode: {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          placeholder: 'ZIP Code'
+          placeholder: 'ZIP Code',
         },
         value: '',
         validation: {
           required: true,
           minLength: 5,
-          maxLength: 5
+          maxLength: 5,
         },
         valid: false,
-        touched: false
+        touched: false,
       },
       country: {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          placeholder: 'Country'
+          placeholder: 'Country',
         },
         value: '',
         validation: {
-          required: true
+          required: true,
         },
         valid: false,
-        touched: false
+        touched: false,
       },
       email: {
         elementType: 'input',
         elementConfig: {
           type: 'email',
-          placeholder: 'Your E-mail'
+          placeholder: 'Your E-mail',
         },
         value: '',
         validation: {
-          required: true
+          required: true,
         },
         valid: false,
-        touched: false
+        touched: false,
       },
       deliveryMethod: {
         elementType: 'select',
@@ -88,11 +88,10 @@ class ContactData extends Component {
         },
         value: 'fastest',
         validation: {},
-        valid: true
+        valid: true,
       },
     },
-    loading: false,
-    formIsValid: false
+    formIsValid: false,
   };
 
   checkValidity(value, rules) {
@@ -102,11 +101,11 @@ class ContactData extends Component {
       isValid = value.trim() !== '' && isValid;
     }
 
-    if(rules.minLength) {
+    if (rules.minLength) {
       isValid = value.length >= rules.minLength && isValid;
     }
 
-    if(rules.maxLength) {
+    if (rules.maxLength) {
       isValid = value.length <= rules.maxLength && isValid;
     }
 
@@ -116,14 +115,14 @@ class ContactData extends Component {
   orderHandler = (event) => {
     event.preventDefault();
     const formData = {};
-    for(let formElementIdentifier in this.state.orderForm) {
-      formData[formElementIdentifier]  = this.state.orderForm[formElementIdentifier].value;
+    for (let formElementIdentifier in this.state.orderForm) {
+      formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
     }
 
     const order = {
       ingredients: this.props.ings,
       price: this.props.price,
-      orderData: formData
+      orderData: formData,
     };
 
     this.props.onOrderBurger(order);
@@ -132,26 +131,27 @@ class ContactData extends Component {
 
   onChangedHandler = (event, inputIdentifier) => {
     const updatedOrderForm = {
-        ...this.state.orderForm
-    }
+      ...this.state.orderForm,
+    };
 
     const updatedFormElement = {
-        ...updatedOrderForm[inputIdentifier]
-    }
+      ...updatedOrderForm[inputIdentifier],
+    };
 
     updatedFormElement.value = event.target.value;
     updatedFormElement.touched = true;
 
-    updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+    updatedFormElement.valid = this.checkValidity(updatedFormElement.value,
+        updatedFormElement.validation);
 
     let formIsValid = true;
-    for(let inputIdentifier in updatedFormElement) {
+    for (let inputIdentifier in updatedFormElement) {
       formIsValid = updatedFormElement[inputIdentifier].valid && formIsValid;
     }
 
     updatedOrderForm[inputIdentifier] = updatedFormElement;
     this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
-  }
+  };
 
   render() {
     const formElementArray = [];
@@ -164,21 +164,23 @@ class ContactData extends Component {
     let form = (
         <form onSubmit={this.orderHandler}>
           {formElementArray.map(formElement => (
-            <Input
-                key={formElement.id}
-                elementType={formElement.config.elementType}
-                elementConfig={formElement.config.elementConfig}
-                value={formElement.config.value}
-                invalid={!formElement.config.valid}
-                shouldValidate={formElement.config.validation}
-                touched = {formElement.config.touched}
-                changed={(event) => this.onChangedHandler(event, formElement.id)}
-            />
+              <Input
+                  key={formElement.id}
+                  elementType={formElement.config.elementType}
+                  elementConfig={formElement.config.elementConfig}
+                  value={formElement.config.value}
+                  invalid={!formElement.config.valid}
+                  shouldValidate={formElement.config.validation}
+                  touched={formElement.config.touched}
+                  changed={(event) => this.onChangedHandler(event,
+                      formElement.id)}
+              />
           ))}
-          <Button btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
+          <Button btnType="Success"
+                  disabled={!this.state.formIsValid}>ORDER</Button>
         </form>);
 
-    if (this.state.loading) {
+    if (this.props.loading) {
       form = <Spinner/>;
     }
     return (
@@ -193,14 +195,15 @@ class ContactData extends Component {
 const mapStateToProps = state => {
   return {
     ings: state.ingredients,
-    price: state.totalPrice
-  }
-}
+    price: state.totalPrice,
+    loading: state.loading
+  };
+};
 
-const dispatchToProps = dispatch => {
+const mapDispatchToProps = dispatch => {
   return {
-    onOrderBurger: (orderData) => dispatch(actions.purchaseBurgerStart(orderData))
-  }
-}
+    onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData)),
+  };
+};
 
-export default connect(mapStateToProps)(withErrorHandler(ContactData, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));
