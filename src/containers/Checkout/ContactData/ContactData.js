@@ -126,7 +126,6 @@ class ContactData extends Component {
     };
 
     this.props.onOrderBurger(order);
-
   };
 
   onChangedHandler = (event, inputIdentifier) => {

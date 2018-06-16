@@ -20,6 +20,7 @@ class BurgerBuilder extends Component {
 
   componentDidMount() {
     this.props.onInitIngredients();
+    console.log("COMPONENT DID MOUNT")
   }
 
   updatePurchaseState(updatedIngredients) {
@@ -48,6 +49,10 @@ class BurgerBuilder extends Component {
   };
 
   render() {
+    console.log("RENDER")
+    console.log("PROJECTS: ", this.props.ings)
+    // console.log("PROJECTS LENGTH: ", this.props.ings.length)
+
     const disabledInfo = {
       ...this.props.ings,
     };
